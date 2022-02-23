@@ -1,0 +1,17 @@
+{
+  "dependencies": {
+    "express": "^4.17.3",
+    "mongoose": "^6.2.3",
+    "mongoose-unique-validator": "^3.0.0",
+    "nodemon": "^2.0.15"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "app.js",
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
