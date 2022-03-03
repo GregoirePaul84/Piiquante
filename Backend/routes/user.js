@@ -3,6 +3,8 @@ const express = require('express');
 
 // Création du routeur
 const router = express.Router();
+
+// Importation du controleur user
 const userCtrl = require('../controllers/user');
 
 // Création de routes post pour envoyer les informations

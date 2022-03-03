@@ -1,3 +1,4 @@
+// Importation de bcrypt pour hacher le mot de passe
 const bcrypt = require('bcrypt');
 
 const User= require('../models/user');

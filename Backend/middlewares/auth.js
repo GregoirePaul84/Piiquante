@@ -1,4 +1,4 @@
-// middleware permettant d'authentifier l'utilisateur
+// ************ middleware permettant d'authentifier l'utilisateur ************ //
 
 // importation du package jwt pour vérifier les tokens
 const jwt = require('jsonwebtoken');
