@@ -1,8 +1,18 @@
-// Importatiopn des modules
+// Importation des modules
 const express = require('express');
 const mongoose = require('mongoose');
-const userRoutes = require('./routes/user')
+
+// Importation des routeurs 
+const userRoutes = require('./routes/user');
+const sauceRoutes = require('./routes/sauce');
 const app = express();
+
+// Connection à mongoDB
+mongoose.connect('mongodb+srv://gregoirePaulet:n7CcDMurQkqfZpYM@cluster0.s0jcc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
+  { useNewUrlParser: true,
+    useUnifiedTopology: true })
+  .then(() => console.log('Connexion à MongoDB réussie !'))
+  .catch(() => console.log('Connexion à MongoDB échouée !'));
 
 // Headers permettant d'éviter les erreurs CORS
 app.use((req, res, next) => {
@@ -12,14 +22,9 @@ app.use((req, res, next) => {
   next();
 });
 
-// Connection à mongoDB
-mongoose.connect('mongodb+srv://gregoirePaulet:n7CcDMurQkqfZpYM@cluster0.s0jcc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
-  { useNewUrlParser: true,
-    useUnifiedTopology: true })
-  .then(() => console.log('Connexion à MongoDB réussie !'))
-  .catch(() => console.log('Connexion à MongoDB échouée !'));
-
+app.use(express.json());
 
 app.use('/api/auth', userRoutes);
+app.use('/api/sauces', sauceRoutes);
 
 module.exports = app;
