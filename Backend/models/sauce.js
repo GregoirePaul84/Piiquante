@@ -1,3 +1,5 @@
+// ************ Création et exportation du modèle de sauce ************ //
+
 // Importation de mongoose
 const mongoose = require('mongoose');
 

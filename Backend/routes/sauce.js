@@ -1,3 +1,4 @@
+// ************ Construction de la route sauce ************ //
 
 // Importation d'express
 const express = require('express');
@@ -18,7 +19,11 @@ const multer = require('../middlewares/multer-config');
 router.get('/', auth, sauceCtrl.getAllSauces);
 // Création d'une route permettant la récupération d'une sauce en particulier
 router.get('/:id', auth, sauceCtrl.getOneSauce);
-// Création d'une route pour créer une sauce, associée à multer 
+// Création d'une route pour créer une sauce
 router.post('/', auth, multer, sauceCtrl.createSauce);
+// Création d'une route pour modifier les informations d'une sauce
+router.put('/:id', auth, multer, sauceCtrl.modifySauce)
+// Création d'une route pour supprimer une sauce
+router.delete('/:id', auth, sauceCtrl.deleteSauce);
 
 module.exports = router;

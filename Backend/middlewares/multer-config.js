@@ -1,4 +1,6 @@
-// Middleware pour enregistrer les images
+// ************ Middleware pour enregistrer les images ************//
+
+// Importation de multer
 const multer = require('multer');
 
 // Gère les extensions des fichiers
