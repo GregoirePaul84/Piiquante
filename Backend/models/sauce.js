@@ -13,8 +13,10 @@ const sauceSchema = mongoose.Schema({
   mainPepper: { type: String, required: true },
   imageUrl: { type: String, required: true },
   heat: { type: Number, required: true },
+  // Par défaut les like et dislike ont une valeur de 0
   likes: { type: Number, default: 0, required: true },
   dislikes: { type: Number, default: 0, required: true },
+  // Tableaux contenants tous les userID qui ont liké ou disliké la sauce en question
   usersLiked: { type: [String],  default: [], required: true },
   usersDisliked: { type: [String],  default: [], required: true },
 });

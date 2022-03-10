@@ -7,6 +7,7 @@ const Sauce = require('../models/sauce');
 const fs = require('fs');
 
 // Récupération de toutes les sauces
+
 exports.getAllSauces = (req, res, next) => {
     Sauce.find()
       .then((sauces) => res.status(200).json(sauces))
@@ -14,13 +15,16 @@ exports.getAllSauces = (req, res, next) => {
   };
 
 // Récupération d'une sauce
+
 exports.getOneSauce = (req, res, next) => {
+  
   Sauce.findOne({_id: req.params.id})
     .then((sauce) => res.status(200).json(sauce))
     .catch((error) => res.status(400).json({ error }));
 };
 
 // Création d'une sauce
+
 exports.createSauce = (req, res, next) => {
   console.log("Nouvelle sauce : ", req.body.sauce);
   // Récupération des données du front-end en format JSON
@@ -39,6 +43,7 @@ exports.createSauce = (req, res, next) => {
 };
 
 // Modification d'une sauce
+
 exports.modifySauce = (req, res, next) => {
   /* Test pour vérifier si il y'a une nouvelle image dans la modification
   Si nouvelle image on aura un req.file 
@@ -60,6 +65,7 @@ exports.modifySauce = (req, res, next) => {
 };
 
 // Suppression d'une sauce
+
 exports.deleteSauce = (req, res, next) => {
   // On va chercher grâce à findOne la sauce qui a l'id dans les paramètres de la requête
   Sauce.findOne({ _id: req.params.id })
@@ -76,4 +82,82 @@ exports.deleteSauce = (req, res, next) => {
       });
     })
     .catch(error => res.status(500).json({ error }));
+};
+
+// Like / Dislike d'une sauce
+
+exports.likeOrDislike = (req, res, next) => {
+  
+  // Récupération du like (1) ou dislike (-1) dans le corps de la requête
+  let like = req.body.like;
+  console.log(like);
+  // récupération de l'userID qui like ou dislike la sauce 
+  let userId = req.body.userId;
+  console.log(userId);
+  // Récupération de l'id de la sauce
+  let sauceId = req.params.id;
+
+  // Si l'utilisateur like une sauce
+  if (like === 1) {
+    // On met à jour la sauce selon son ID
+    Sauce.updateOne(
+      {_id: sauceId}, 
+      // On ajoute l'id de l'utilisateur qui a liké dans le tableau usersLiked, puis on incrémente le like
+      { $push: {usersLiked : userId}, 
+        $inc: {likes: 1} 
+      }) 
+
+      .then(() => res.status(200).json({ message: "Votre like a bien été ajouté !"}))
+      .catch(error => res.status(400).json({ error }));
+  }
+
+  // Si l'utilisateur dislike une sauce
+  if (like === -1) {
+    // On met à jour la sauce selon son ID
+    Sauce.updateOne(
+      {_id: sauceId}, 
+      // On ajoute l'id de l'utilisateur qui a disliké dans le tableau usersDisliked, puis on incrémente le dislike
+      { $push: {usersDisliked : userId}, 
+        $inc: {dislikes: 1} 
+      }) 
+
+      .then(() => res.status(200).json({ message: "Votre dislike a bien été ajouté !"}))
+      .catch(error => res.status(400).json({ error }));
+  }
+
+  // Si l'utilisateur annule son like ou dislike
+  if (like === 0) {
+    
+    // findOne renvoie le premier document qui correspond à l'ID de la sauce, puis renvoie une promise
+    Sauce.findOne( {_id: sauceId} )
+      
+    .then(sauce => {
+
+        // Si l'user ID est présent dans le tableau usersLiked
+        if (sauce.usersLiked.includes(userId)) {
+          // On met à jour le tableau en retirant l'user ID du tableau et on décrémente le like
+          Sauce.updateOne( 
+            {_id: sauceId}, 
+            { $pull: { usersLiked: userId }, 
+              $inc: { likes: -1 } })
+            
+            .then(() => res.status(200).json({ message: 'Votre like a bien été supprimé !'}))
+            .catch(error => res.status(400).json({ error }))
+        }
+        
+        // Si l'user ID est présent dans le tableau usersLiked
+        if (sauce.usersDisliked.includes(userId)) {
+          // On met à jour le tableau en retirant l'user ID du tableau et on décrémente le dislike
+          Sauce.updateOne( 
+            {_id: sauceId}, 
+            { $pull: { usersDisliked: userId }, 
+              $inc: { dislikes: -1 } })
+
+            .then(() => res.status(200).json({ message: 'Votre dislike a bien été supprimé !'}))
+            .catch(error => res.status(400).json({ error }))
+        }
+      })
+      .catch(error => res.status(400).json({ error }));
+      
+  }
 };

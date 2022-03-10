@@ -25,5 +25,7 @@ router.post('/', auth, multer, sauceCtrl.createSauce);
 router.put('/:id', auth, multer, sauceCtrl.modifySauce)
 // Création d'une route pour supprimer une sauce
 router.delete('/:id', auth, sauceCtrl.deleteSauce);
+// Création d'une route pour gérer les likes et dislikes
+router.post('/:id/like', auth, sauceCtrl.likeOrDislike);
 
 module.exports = router;

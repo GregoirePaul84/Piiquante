@@ -1,13 +1,18 @@
 // ************ Gère les requêtes envoyées au serveur ************ //
 
-// Importation des modules
+// Importation d'express
 const express = require('express');
+
+// Importation de mongoose qui permet de faire le lien entre mongoDB et notre application
 const mongoose = require('mongoose');
 
 const app = express();
 
 // Importation pour accéder aux chemins du serveur
 const path = require('path');
+
+// Importation de helmet pour renforcer les en-têtes des requêtes HTTP
+const helmet = require('helmet')
 
 // Importation des routeurs 
 const userRoutes = require('./routes/user');
@@ -19,6 +24,11 @@ mongoose.connect('mongodb+srv://gregoirePaulet:n7CcDMurQkqfZpYM@cluster0.s0jcc.m
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
+
+
+// On inclue les 15 middlewares de Helmet pour la sécurité 
+app.use(helmet());
+
 
 // Headers permettant d'éviter les erreurs CORS
 app.use((req, res, next) => {
