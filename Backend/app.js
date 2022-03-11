@@ -1,5 +1,8 @@
 // ************ Gère les requêtes envoyées au serveur ************ //
 
+// Importation de dotenv 
+require('dotenv').config();
+
 // Importation d'express
 const express = require('express');
 
@@ -18,8 +21,8 @@ const helmet = require('helmet')
 const userRoutes = require('./routes/user');
 const sauceRoutes = require('./routes/sauce');
 
-// Connection à mongoDB
-mongoose.connect('mongodb+srv://gregoirePaulet:n7CcDMurQkqfZpYM@cluster0.s0jcc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
+// Connection à mongoDB via les variables d'environnement de dotenv
+mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_CLUSTER}?retryWrites=true&w=majority`,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
