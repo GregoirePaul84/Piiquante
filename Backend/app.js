@@ -17,6 +17,9 @@ const path = require('path');
 // Importation de helmet pour renforcer les en-têtes des requêtes HTTP
 const helmet = require('helmet')
 
+// Importation d'express mango sanitize pour bloquer l'utilisation de certains caractères et ainsi limiter les attaques par injection
+const mongoSanitize = require('express-mongo-sanitize');
+
 // Importation des routeurs 
 const userRoutes = require('./routes/user');
 const sauceRoutes = require('./routes/sauce');
@@ -29,9 +32,10 @@ mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PA
   .catch(() => console.log('Connexion à MongoDB échouée !'));
 
 
-// On inclue les 15 middlewares de Helmet pour la sécurité 
+// On inclue tous les middlewares de Helmet pour la sécurité 
 app.use(helmet());
 
+app.use(mongoSanitize());
 
 // Headers permettant d'éviter les erreurs CORS
 app.use((req, res, next) => {
@@ -43,11 +47,13 @@ app.use((req, res, next) => {
   next();
 });
 
-// Permet d'accéder au corps de la requête contenant du JSON
+// Permet d'accéder au corps de la requête (req.body) contenant du JSON
 app.use(express.json());
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
+
 app.use('/api/auth', userRoutes);
+
 app.use('/api/sauces', sauceRoutes);
 
 module.exports = app;
